@@ -47,11 +47,16 @@ export default function Home() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [inputTicker, setInputTicker] = useState("")
+
+  useEffect(() => {
+    setAppState((prevState) => ({ ...prevState, stockData: null }))
+  }, [setAppState])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      if (!ticker) {
+      if (!inputTicker) {
         setError("Please enter a stock ticker")
         return
       }
@@ -63,7 +68,7 @@ export default function Home() {
       setIsLoading(true)
       setError("")
       try {
-        const { prices, dates } = await fetchStockData(ticker, timeRange)
+        const { prices, dates } = await fetchStockData(inputTicker, timeRange)
 
         if (!prices || !dates || prices.length === 0 || dates.length === 0) {
           throw new Error("No data received from the API")
@@ -81,7 +86,7 @@ export default function Home() {
           rsi: rsi[index],
         }))
 
-        setAppState((prevState) => ({ ...prevState, stockData: chartData }))
+        setAppState((prevState) => ({ ...prevState, ticker: inputTicker, stockData: chartData }))
         setError("")
       } catch (err) {
         console.error("Error analyzing stock:", err)
@@ -91,7 +96,7 @@ export default function Home() {
         setIsLoading(false)
       }
     },
-    [ticker, timeRange, bollingerPeriod, rsiPeriod, setAppState, isLoading],
+    [inputTicker, timeRange, bollingerPeriod, rsiPeriod, setAppState, isLoading],
   )
 
   const resetForm = () => {
@@ -102,6 +107,7 @@ export default function Home() {
       rsiPeriod: DEFAULT_VALUES.rsiPeriod,
       stockData: null,
     })
+    setInputTicker("")
     setError("")
   }
 
@@ -110,33 +116,8 @@ export default function Home() {
       setError("Please analyze a stock before viewing closing prices")
       return
     }
-    // Remove router.push and use window.location for a full page navigation
     window.location.href = `/closing-prices?ticker=${ticker}&timeRange=${timeRange}`
   }
-
-  useEffect(() => {
-    if (appState.stockData === null && ticker) {
-      const syntheticEvent: React.FormEvent<HTMLFormElement> = {
-        preventDefault: () => {},
-        target: null,
-        currentTarget: null,
-        bubbles: true,
-        cancelable: true,
-        defaultPrevented: false,
-        eventPhase: 0,
-        isTrusted: true,
-        nativeEvent: null,
-        timeStamp: Date.now(),
-        type: "submit",
-        isDefaultPrevented: () => false,
-        stopPropagation: () => {},
-        isPropagationStopped: () => false,
-        persist: () => {},
-      } as unknown as React.FormEvent<HTMLFormElement>
-
-      handleSubmit(syntheticEvent)
-    }
-  }, [appState.stockData, ticker, handleSubmit])
 
   const chartRef = useRef<HTMLDivElement>(null)
 
@@ -170,8 +151,8 @@ export default function Home() {
         <div className="flex gap-4">
           <Input
             type="text"
-            value={ticker}
-            onChange={(e) => setAppState((prevState) => ({ ...prevState, ticker: e.target.value.toUpperCase() }))}
+            value={inputTicker}
+            onChange={(e) => setInputTicker(e.target.value.toUpperCase())}
             placeholder="Enter stock ticker (e.g., AAPL)"
             className="flex-1"
           />
@@ -294,4 +275,3 @@ export default function Home() {
     </main>
   )
 }
-
