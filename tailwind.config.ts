@@ -21,7 +21,7 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(25, 95%, 53%)", // Warm orange
+          DEFAULT: "hsl(142, 76%, 36%)", // A vibrant green color
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -77,3 +77,4 @@ const config: Config = {
 } satisfies Config
 
 export default config
+

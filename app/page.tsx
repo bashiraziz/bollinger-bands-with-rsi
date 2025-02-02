@@ -165,12 +165,7 @@ export default function Home() {
           <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             {isLoading ? "Loading..." : "Analyze Stock"}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={resetForm}
-            className="border-primary text-primary hover:bg-primary/10"
-          >
+          <Button type="button" variant="outline" onClick={resetForm} className="bg-black text-white hover:bg-black/90">
             Reset
           </Button>
         </div>
@@ -277,7 +272,8 @@ export default function Home() {
         </div>
       )}
       <Separator className="my-8" />
-      <footer className="text-center text-sm text-muted-foreground">Created by Rowshni</footer>
+      <footer className="text-center text-sm text-muted-foreground">Created by Bashir Aziz (aka Rowshni)</footer>
     </main>
   )
 }
+
