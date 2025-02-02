@@ -272,7 +272,18 @@ export default function Home() {
         </div>
       )}
       <Separator className="my-8" />
-      <footer className="text-center text-sm text-muted-foreground">Created by Bashir Aziz (aka Rowshni)</footer>
+      <footer className="text-center text-sm text-muted-foreground">
+        Created by{" "}
+        <a
+          href="https://www.linkedin.com/in/bashiraziz/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          Bashir Aziz
+        </a>{" "}
+        (aka Rowshni)
+      </footer>
     </main>
   )
 }
