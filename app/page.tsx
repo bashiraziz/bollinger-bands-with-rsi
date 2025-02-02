@@ -56,10 +56,19 @@ export default function Home() {
         return
       }
 
+      if (isLoading) {
+        return // Prevent multiple simultaneous requests
+      }
+
       setIsLoading(true)
       setError("")
       try {
         const { prices, dates } = await fetchStockData(ticker, timeRange)
+
+        if (!prices || !dates || prices.length === 0 || dates.length === 0) {
+          throw new Error("No data received from the API")
+        }
+
         const bollingerBands = calculateBollingerBands(prices, bollingerPeriod)
         const rsi = calculateRSI(prices, rsiPeriod)
 
@@ -76,13 +85,13 @@ export default function Home() {
         setError("")
       } catch (err) {
         console.error("Error analyzing stock:", err)
-        setError(err instanceof Error ? err.message : "Failed to analyze stock data")
+        setError(err instanceof Error ? err.message : "An unexpected error occurred while analyzing stock data")
         setAppState((prevState) => ({ ...prevState, stockData: null }))
       } finally {
         setIsLoading(false)
       }
     },
-    [ticker, timeRange, bollingerPeriod, rsiPeriod, setAppState],
+    [ticker, timeRange, bollingerPeriod, rsiPeriod, setAppState, isLoading],
   )
 
   const resetForm = () => {
@@ -106,7 +115,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (appState.stockData) {
+    if (appState.stockData === null && ticker) {
       const syntheticEvent: React.FormEvent<HTMLFormElement> = {
         preventDefault: () => {},
         target: null,
@@ -127,7 +136,7 @@ export default function Home() {
 
       handleSubmit(syntheticEvent)
     }
-  }, [appState.stockData, handleSubmit])
+  }, [appState.stockData, ticker, handleSubmit])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-br from-secondary via-background to-muted">
