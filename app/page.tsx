@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -138,6 +138,14 @@ export default function Home() {
     }
   }, [appState.stockData, ticker, handleSubmit])
 
+  const chartRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (stockData && chartRef.current) {
+      chartRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [stockData])
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-12 bg-gradient-to-br from-secondary via-background to-muted">
       <div className="w-full max-w-4xl mb-4">
@@ -260,7 +268,7 @@ export default function Home() {
         </Alert>
       )}
       {stockData && (
-        <div className="w-full max-w-4xl bg-card p-6 rounded-lg shadow-md mt-8">
+        <div ref={chartRef} className="w-full max-w-4xl bg-card p-6 rounded-lg shadow-md mt-8">
           <BollingerRSIChart data={stockData} rsiPeriod={rsiPeriod} />
           <StockAnalysisExplanation data={stockData} ticker={ticker} rsiPeriod={rsiPeriod} />
           <DataInfo
