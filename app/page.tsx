@@ -135,13 +135,19 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-8 text-foreground">Stock Analysis: Bollinger Bands & RSI</h1>
       <div className="flex justify-center gap-8 mb-8">
         <Link href="/about-technical-analysis">
-          <span className="text-foreground hover:text-foreground/80 text-sm">Learn about technical analysis</span>
+          <span className="text-primary font-medium hover:text-primary/80 text-sm underline-offset-4 hover:underline transition-colors">
+            Learn about technical analysis
+          </span>
         </Link>
         <Link href="/trading-strategy">
-          <span className="text-foreground hover:text-foreground/80 text-sm">View trading strategy guide</span>
+          <span className="text-primary font-medium hover:text-primary/80 text-sm underline-offset-4 hover:underline transition-colors">
+            View trading strategy guide
+          </span>
         </Link>
         <Link href="/about">
-          <span className="text-foreground hover:text-foreground/80 text-sm">About this app</span>
+          <span className="text-primary font-medium hover:text-primary/80 text-sm underline-offset-4 hover:underline transition-colors">
+            About this app
+          </span>
         </Link>
       </div>
       <form
@@ -229,11 +235,11 @@ export default function Home() {
         <p className="text-base font-medium text-foreground">This chart combines two powerful technical indicators:</p>
         <div className="space-y-2 text-sm">
           <p>
-            <span className="text-primary font-medium">Bollinger Bands</span>{" "}
+            <span className="text-foreground font-medium">Bollinger Bands</span>{" "}
             <span className="text-muted-foreground">show volatility with adjustable periods (default: 20 days)</span>
           </p>
           <p>
-            <span className="text-primary font-medium">RSI (Relative Strength Index)</span>{" "}
+            <span className="text-foreground font-medium">RSI (Relative Strength Index)</span>{" "}
             <span className="text-muted-foreground">
               measures momentum with customizable periods (default: 14 days)
             </span>
