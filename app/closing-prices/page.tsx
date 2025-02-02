@@ -39,7 +39,7 @@ export default function ClosingPricesPage() {
 
       try {
         const { prices, dates } = await fetchStockData(ticker, Number.parseInt(timeRange, 10))
-        const formattedPrices = dates.map((date, index) => ({
+        const formattedPrices: ClosingPrice[] = dates.map((date: string, index: number) => ({
           date,
           price: prices[index],
         }))
@@ -54,7 +54,7 @@ export default function ClosingPricesPage() {
     }
 
     fetchPrices()
-  }, []) // Run only once on mount
+  }, [])
 
   if (isLoading) {
     return (
@@ -128,4 +128,3 @@ export default function ClosingPricesPage() {
     </div>
   )
 }
-
