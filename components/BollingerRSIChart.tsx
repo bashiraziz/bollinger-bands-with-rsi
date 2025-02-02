@@ -17,11 +17,15 @@ interface ChartData {
   date: string
   price: number
   upper: number
+  middle: number
   lower: number
   rsi: number | null
 }
 
-const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { color: string; name: string; value: number; payload: ChartData }[] }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+}: { active?: boolean; payload?: { color: string; name: string; value: number; payload: ChartData }[] }) => {
   if (!active || !payload || payload.length === 0) return null
 
   return (
@@ -135,4 +139,3 @@ export default function BollingerRSIChart({ data, rsiPeriod }: { data: ChartData
     </Card>
   )
 }
-

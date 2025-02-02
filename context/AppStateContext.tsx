@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 
-interface AppState {
+export interface AppState {
   ticker: string
   timeRange: number
   bollingerPeriod: number
@@ -22,6 +22,7 @@ interface AppState {
 interface AppStateContextType {
   appState: AppState
   setAppState: React.Dispatch<React.SetStateAction<AppState>>
+  resetAppState: () => void
 }
 
 const DEFAULT_STATE: AppState = {
@@ -34,38 +35,57 @@ const DEFAULT_STATE: AppState = {
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined)
 
-export function AppStateProvider({ children }: { children: React.ReactNode }) {
-  const [appState, setAppState] = useState<AppState>(DEFAULT_STATE)
-  const [isInitialized, setIsInitialized] = useState(false)
+function getStorageValue(key: string, defaultValue: any) {
+  if (typeof window === "undefined") return defaultValue
 
+  try {
+    const saved = localStorage.getItem(key)
+    return saved ? JSON.parse(saved) : defaultValue
+  } catch (err) {
+    console.warn("Failed to access localStorage:", err)
+    return defaultValue
+  }
+}
+
+function setStorageValue(key: string, value: any) {
+  if (typeof window === "undefined") return
+
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch (err) {
+    console.warn("Failed to save to localStorage:", err)
+  }
+}
+
+export function AppStateProvider({ children }: { children: React.ReactNode }) {
+  const [appState, setAppState] = useState<AppState>(() => getStorageValue("appState", DEFAULT_STATE))
+  const [mounted, setMounted] = useState(false)
+
+  // Only run after component is mounted
   useEffect(() => {
-    try {
-      const savedState = localStorage.getItem("appState")
-      if (savedState) {
-        setAppState(JSON.parse(savedState))
-      }
-    } catch (error) {
-      console.warn("Failed to load state from localStorage:", error)
-    }
-    setIsInitialized(true)
+    setMounted(true)
   }, [])
 
   useEffect(() => {
-    if (isInitialized) {
-      try {
-        localStorage.setItem("appState", JSON.stringify(appState))
-      } catch (error) {
-        console.warn("Failed to save state to localStorage:", error)
-      }
+    if (mounted) {
+      setStorageValue("appState", appState)
     }
-  }, [appState, isInitialized])
+  }, [appState, mounted])
 
-  // Don't render children until initial state is loaded
-  if (!isInitialized) {
-    return null
+  const resetAppState = () => {
+    setAppState(DEFAULT_STATE)
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("appState")
+      }
+    } catch (err) {
+      console.warn("Failed to remove from localStorage:", err)
+    }
   }
 
-  return <AppStateContext.Provider value={{ appState, setAppState }}>{children}</AppStateContext.Provider>
+  return (
+    <AppStateContext.Provider value={{ appState, setAppState, resetAppState }}>{children}</AppStateContext.Provider>
+  )
 }
 
 export function useAppState() {
@@ -75,4 +95,3 @@ export function useAppState() {
   }
   return context
 }
-

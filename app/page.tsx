@@ -13,7 +13,7 @@ import BollingerRSIChart from "@/components/BollingerRSIChart"
 import { StockAnalysisExplanation } from "@/components/StockAnalysisExplanation"
 import { DataInfo } from "@/components/DataInfo"
 import { Logo } from "@/components/Logo"
-import { useAppState } from "@/context/AppStateContext"
+import { useAppState, type AppState } from "@/context/AppStateContext"
 
 const TIME_RANGES = [
   { label: "3 Months", value: 90 },
@@ -35,14 +35,8 @@ const RSI_PERIODS = [
   { label: "30 Days", value: 30 },
 ]
 
-const DEFAULT_VALUES = {
-  timeRange: 180,
-  bollingerPeriod: 20,
-  rsiPeriod: 14,
-}
-
 export default function Home() {
-  const { appState, setAppState } = useAppState()
+  const { appState, setAppState, resetAppState } = useAppState()
   const { ticker, timeRange, bollingerPeriod, rsiPeriod, stockData } = appState
 
   const [isLoading, setIsLoading] = useState(false)
@@ -50,8 +44,10 @@ export default function Home() {
   const [inputTicker, setInputTicker] = useState("")
 
   useEffect(() => {
-    setAppState((prevState) => ({ ...prevState, stockData: null }))
-  }, [setAppState])
+    if (stockData) {
+      setInputTicker(ticker)
+    }
+  }, [stockData, ticker])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,7 +82,14 @@ export default function Home() {
           rsi: rsi[index],
         }))
 
-        setAppState((prevState) => ({ ...prevState, ticker: inputTicker, stockData: chartData }))
+        setAppState((prevState) => ({
+          ...prevState,
+          ticker: inputTicker,
+          timeRange,
+          bollingerPeriod,
+          rsiPeriod,
+          stockData: chartData as AppState["stockData"],
+        }))
         setError("")
       } catch (err) {
         console.error("Error analyzing stock:", err)
@@ -100,13 +103,7 @@ export default function Home() {
   )
 
   const resetForm = () => {
-    setAppState({
-      ticker: "",
-      timeRange: DEFAULT_VALUES.timeRange,
-      bollingerPeriod: DEFAULT_VALUES.bollingerPeriod,
-      rsiPeriod: DEFAULT_VALUES.rsiPeriod,
-      stockData: null,
-    })
+    resetAppState()
     setInputTicker("")
     setError("")
   }
@@ -249,7 +246,7 @@ export default function Home() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      {stockData && (
+      {stockData && stockData.length > 0 && (
         <div ref={chartRef} className="w-full max-w-4xl bg-card p-6 rounded-lg shadow-md mt-8">
           <BollingerRSIChart data={stockData} rsiPeriod={rsiPeriod} />
           <StockAnalysisExplanation data={stockData} ticker={ticker} rsiPeriod={rsiPeriod} />
