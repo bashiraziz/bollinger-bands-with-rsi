@@ -84,7 +84,7 @@ export default function Home() {
         setIsLoading(false)
       }
     },
-    [ticker, timeRange, bollingerPeriod, rsiPeriod],
+    [ticker, timeRange, bollingerPeriod, rsiPeriod, setAppState],
   )
 
   const resetForm = () => {
@@ -109,7 +109,13 @@ export default function Home() {
 
   useEffect(() => {
     if (appState.stockData) {
-      handleSubmit(new Event("submit") as React.FormEvent<HTMLFormElement>)
+      const syntheticEvent = {
+        preventDefault: () => {},
+        target: null,
+        currentTarget: null,
+      } as React.FormEvent<HTMLFormElement>
+
+      handleSubmit(syntheticEvent)
     }
   }, [ticker, timeRange, bollingerPeriod, rsiPeriod, handleSubmit])
 
@@ -266,4 +272,3 @@ export default function Home() {
     </main>
   )
 }
-
