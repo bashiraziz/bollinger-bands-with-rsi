@@ -87,7 +87,7 @@ export function StockAnalysisExplanation({ data, ticker, rsiPeriod }: StockAnaly
             {((isOverBought && !isAboveBands) || (isOverSold && !isBelowBands)) &&
               " There's a divergence between price action and momentum. Watch for potential trend reversals."}
           </p>
-          <Alert variant="warning" className="mt-4">
+          <Alert variant="destructive" className="mt-4">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription className="text-sm">
               Note: This analysis is based on technical indicators and should be used in conjunction with fundamental
