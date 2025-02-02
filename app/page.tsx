@@ -139,11 +139,22 @@ export default function Home() {
   }, [appState.stockData, ticker, handleSubmit])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-br from-secondary via-background to-muted">
-      <div className="w-full max-w-4xl mb-8">
+    <main className="flex min-h-screen flex-col items-center justify-center p-12 bg-gradient-to-br from-secondary via-background to-muted">
+      <div className="w-full max-w-4xl mb-4">
         <Logo />
       </div>
       <h1 className="text-4xl font-bold mb-8 text-foreground">Stock Analysis: Bollinger Bands & RSI</h1>
+      <div className="flex justify-center gap-8 mb-8">
+        <Link href="/about-technical-analysis">
+          <span className="text-foreground hover:text-foreground/80 text-sm">Learn about technical analysis</span>
+        </Link>
+        <Link href="/trading-strategy">
+          <span className="text-foreground hover:text-foreground/80 text-sm">View trading strategy guide</span>
+        </Link>
+        <Link href="/about">
+          <span className="text-foreground hover:text-foreground/80 text-sm">About this app</span>
+        </Link>
+      </div>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 mb-8 w-full max-w-xl bg-card p-6 rounded-lg shadow-md"
@@ -225,39 +236,23 @@ export default function Home() {
           </div>
         </div>
       </form>
-      <div className="text-center mb-8 space-y-4 bg-card p-6 rounded-lg shadow-md">
-        <div className="max-w-xl mx-auto space-y-2">
-          <p className="text-base font-medium text-foreground">
-            This chart combines two powerful technical indicators:
+      <div className="text-center mb-8 space-y-4 bg-card p-6 rounded-lg shadow-md max-w-xl mx-auto">
+        <p className="text-base font-medium text-foreground">This chart combines two powerful technical indicators:</p>
+        <div className="space-y-2 text-sm">
+          <p>
+            <span className="text-primary font-medium">Bollinger Bands</span>{" "}
+            <span className="text-muted-foreground">show volatility with adjustable periods (default: 20 days)</span>
           </p>
-          <div className="space-y-3 text-sm text-muted-foreground">
-            <p>
-              <span className="font-semibold">Bollinger Bands</span> show volatility with adjustable periods (default:
-              20 days)
-            </p>
-            <p>
-              <span className="font-semibold">RSI (Relative Strength Index)</span> measures momentum with customizable
-              periods (default: 14 days)
-            </p>
-            <p>
-              RSI readings above 70 indicate overbought conditions, while readings below 30 suggest oversold conditions.
-            </p>
-            <p className="text-sm italic text-accent">
-              Adjust these periods to fine-tune the analysis for different trading styles and market conditions.
-            </p>
-          </div>
+          <p>
+            <span className="text-primary font-medium">RSI (Relative Strength Index)</span>{" "}
+            <span className="text-muted-foreground">
+              measures momentum with customizable periods (default: 14 days)
+            </span>
+          </p>
+          <p className="text-muted-foreground">
+            RSI readings above 70 indicate overbought conditions, while readings below 30 suggest oversold conditions.
+          </p>
         </div>
-      </div>
-      <div className="flex justify-center gap-8 mb-8">
-        <Link href="/about-technical-analysis">
-          <span className="text-foreground hover:text-foreground/80 text-sm">Learn about technical analysis</span>
-        </Link>
-        <Link href="/trading-strategy">
-          <span className="text-foreground hover:text-foreground/80 text-sm">View trading strategy guide</span>
-        </Link>
-        <Link href="/about">
-          <span className="text-foreground hover:text-foreground/80 text-sm">About this app</span>
-        </Link>
       </div>
       {error && (
         <Alert variant="destructive" className="mb-4 max-w-md">
@@ -291,3 +286,4 @@ export default function Home() {
     </main>
   )
 }
+
