@@ -1,44 +1,43 @@
 "use client"
-
-import React from "react" // Import React
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, ReferenceLine } from "recharts"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  ReferenceLine,
+  Tooltip,
+} from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
+import { ChartContainer } from "@/components/ui/chart"
 
 interface ChartData {
   date: string
   price: number
   upper: number
-  middle: number
   lower: number
   rsi: number | null
 }
 
-export default function BollingerRSIChart({ data, rsiPeriod }: { data: ChartData[]; rsiPeriod: number }) {
-  // Reverse the data array to have ascending dates
-  const reversedData = [...data].reverse()
+const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { color: string; name: string; value: number; payload: ChartData }[] }) => {
+  if (!active || !payload || payload.length === 0) return null
 
-  const renderTooltipContent = React.useCallback(
-    ({ active, payload }: { active: boolean | undefined; payload: Array<{ payload: ChartData }> | undefined }) => {
-      if (active && payload && payload.length) {
-        const data = payload[0].payload
-        return (
-          <Card className="p-2 shadow-md bg-background border-primary">
-            <CardContent className="p-2">
-              <p className="font-semibold">{new Date(data.date).toLocaleDateString()}</p>
-              <p>Price: ${data.price.toFixed(2)}</p>
-              <p>Upper Band: ${data.upper.toFixed(2)}</p>
-              <p>Middle Band: ${data.middle.toFixed(2)}</p>
-              <p>Lower Band: ${data.lower.toFixed(2)}</p>
-              <p>RSI: {data.rsi !== null ? data.rsi.toFixed(2) : "N/A"}</p>
-            </CardContent>
-          </Card>
-        )
-      }
-      return null
-    },
-    [],
+  return (
+    <div className="bg-white p-2 border border-gray-300 rounded shadow-lg">
+      <p className="font-bold">{new Date(payload[0].payload.date).toLocaleDateString()}</p>
+      {payload.map((entry, index) => (
+        <p key={index} style={{ color: entry.color }}>
+          {entry.name}: {entry.value.toFixed(2)}
+        </p>
+      ))}
+    </div>
   )
+}
+
+export default function BollingerRSIChart({ data, rsiPeriod }: { data: ChartData[]; rsiPeriod: number }) {
+  const reversedData = [...data].reverse()
 
   return (
     <Card className="w-full max-w-4xl bg-background">
@@ -51,23 +50,19 @@ export default function BollingerRSIChart({ data, rsiPeriod }: { data: ChartData
           config={{
             price: {
               label: "Price",
-              color: "hsl(214, 90%, 52%)", // Bright blue
+              color: "hsl(214, 90%, 52%)",
             },
             upper: {
               label: "Upper Band",
-              color: "hsl(0, 91%, 71%)", // Bright red
-            },
-            middle: {
-              label: "Middle Band",
-              color: "hsl(280, 87%, 65%)", // Bright purple
+              color: "hsl(0, 91%, 71%)",
             },
             lower: {
               label: "Lower Band",
-              color: "hsl(145, 63%, 49%)", // Bright green
+              color: "hsl(145, 63%, 49%)",
             },
             rsi: {
               label: "RSI",
-              color: "hsl(32, 95%, 44%)", // Bright orange
+              color: "hsl(32, 95%, 44%)",
             },
           }}
           className="h-[500px]"
@@ -86,74 +81,53 @@ export default function BollingerRSIChart({ data, rsiPeriod }: { data: ChartData
                 orientation="right"
                 domain={[0, 100]}
                 label={{ value: "RSI", angle: 90, position: "insideRight" }}
-                axisLine={{ stroke: "hsl(32, 95%, 44%)" }}
-                tick={{ fill: "hsl(32, 95%, 44%)" }}
-                tickLine={{ stroke: "hsl(32, 95%, 44%)" }}
               />
-              <ChartTooltip content={renderTooltipContent} />
+              <Tooltip content={<CustomTooltip />} />
               <Legend />
               <Line
                 yAxisId="left"
                 type="monotone"
                 dataKey="price"
-                stroke="hsl(214, 90%, 52%)"
+                stroke="var(--color-price)"
                 strokeWidth={2}
-                dot={{ r: 1 }}
-                activeDot={{ r: 5 }}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2 }}
+                name="Price"
               />
               <Line
                 yAxisId="left"
                 type="monotone"
                 dataKey="upper"
-                stroke="hsl(0, 91%, 71%)"
+                stroke="var(--color-upper)"
                 strokeWidth={1.5}
                 strokeDasharray="5 5"
-                dot={{ r: 1 }}
-                activeDot={{ r: 5 }}
-              />
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="middle"
-                stroke="hsl(280, 87%, 65%)"
-                strokeWidth={1.5}
-                strokeDasharray="3 3"
-                dot={{ r: 1 }}
-                activeDot={{ r: 5 }}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2 }}
+                name="Upper Band"
               />
               <Line
                 yAxisId="left"
                 type="monotone"
                 dataKey="lower"
-                stroke="hsl(145, 63%, 49%)"
+                stroke="var(--color-lower)"
                 strokeWidth={1.5}
                 strokeDasharray="5 5"
-                dot={{ r: 1 }}
-                activeDot={{ r: 5 }}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2 }}
+                name="Lower Band"
               />
               <Line
                 yAxisId="rsi"
                 type="monotone"
                 dataKey="rsi"
-                stroke="hsl(32, 95%, 44%)"
+                stroke="var(--color-rsi)"
                 strokeWidth={2}
-                dot={{ r: 1 }}
-                activeDot={{ r: 5 }}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2 }}
+                name="RSI"
               />
-              <ReferenceLine
-                yAxisId="rsi"
-                y={30}
-                stroke="hsl(32, 95%, 44%)"
-                strokeOpacity={0.7}
-                strokeDasharray="3 3"
-              />
-              <ReferenceLine
-                yAxisId="rsi"
-                y={70}
-                stroke="hsl(32, 95%, 44%)"
-                strokeOpacity={0.7}
-                strokeDasharray="3 3"
-              />
+              <ReferenceLine yAxisId="rsi" y={30} stroke="var(--color-rsi)" strokeOpacity={0.7} strokeDasharray="3 3" />
+              <ReferenceLine yAxisId="rsi" y={70} stroke="var(--color-rsi)" strokeOpacity={0.7} strokeDasharray="3 3" />
             </LineChart>
           </ResponsiveContainer>
         </ChartContainer>
