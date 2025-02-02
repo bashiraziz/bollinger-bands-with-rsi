@@ -41,8 +41,8 @@ export default function TradingStrategy() {
           <li>
             <strong>Interpretation:</strong>
             <ul className="list-disc pl-6">
-              <li>RSI above 70: Typically "overbought"</li>
-              <li>RSI below 30: Typically "oversold"</li>
+              <li>RSI above 70: Typically &quot;overbought&quot;</li>
+              <li>RSI below 30: Typically &quot;oversold&quot;</li>
               <li>RSI crossing key levels (30, 50, 70): Potential momentum shifts</li>
             </ul>
           </li>
@@ -174,4 +174,3 @@ export default function TradingStrategy() {
     </div>
   )
 }
-

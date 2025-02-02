@@ -13,21 +13,21 @@ export default function AboutTechnicalAnalysis() {
 
       <p className="mb-4">
         Technical analysis is a method used by traders to evaluate securities and identify trading opportunities. Unlike
-        fundamental analysis, which examines a company's financial health and market position, technical analysis
+        fundamental analysis, which examines a company&apos;s financial health and market position, technical analysis
         focuses on statistical trends gathered from trading activity, such as price movement and volume.
       </p>
 
       <p className="mb-4">
-        The core assumption of technical analysis is that all known fundamentals are factored into price; thus, there's
-        no need to pay close attention to them. Technical analysts believe that prices move in trends and history tends
-        to repeat itself when it comes to the market's overall psychology.
+        The core assumption of technical analysis is that all known fundamentals are factored into price; thus,
+        there&apos;s no need to pay close attention to them. Technical analysts believe that prices move in trends and
+        history tends to repeat itself when it comes to the market&apos;s overall psychology.
       </p>
 
       <h2 className="text-2xl font-semibold mt-6 mb-4">Key Concepts in Technical Analysis:</h2>
 
       <ul className="list-disc pl-6 mb-4">
         <li>
-          <strong>Trends:</strong> The general direction of a market or asset's price.
+          <strong>Trends:</strong> The general direction of a market or asset&apos;s price.
         </li>
         <li>
           <strong>Support and Resistance:</strong> Price levels where a downtrend or uptrend is expected to pause due to
@@ -58,14 +58,14 @@ export default function AboutTechnicalAnalysis() {
         </li>
         <li>
           <strong>MACD (Moving Average Convergence Divergence):</strong> Shows the relationship between two moving
-          averages of a security's price.
+          averages of a security&apos;s price.
         </li>
       </ul>
 
       <p className="mb-4">
-        While technical analysis can be a powerful tool, it's important to remember that no single method of analysis
-        guarantees success in the stock market. Many traders use a combination of technical and fundamental analysis,
-        along with proper risk management strategies, to make informed trading decisions.
+        While technical analysis can be a powerful tool, it&apos;s important to remember that no single method of
+        analysis guarantees success in the stock market. Many traders use a combination of technical and fundamental
+        analysis, along with proper risk management strategies, to make informed trading decisions.
       </p>
 
       <p className="mb-4">
@@ -81,4 +81,3 @@ export default function AboutTechnicalAnalysis() {
     </div>
   )
 }
-

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -48,10 +47,9 @@ export default function Home() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const router = useRouter()
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (!ticker) {
         setError("Please enter a stock ticker")
@@ -109,15 +107,27 @@ export default function Home() {
 
   useEffect(() => {
     if (appState.stockData) {
-      const syntheticEvent = {
+      const syntheticEvent: React.FormEvent<HTMLFormElement> = {
         preventDefault: () => {},
         target: null,
         currentTarget: null,
-      } as React.FormEvent<HTMLFormElement>
+        bubbles: true,
+        cancelable: true,
+        defaultPrevented: false,
+        eventPhase: 0,
+        isTrusted: true,
+        nativeEvent: null,
+        timeStamp: Date.now(),
+        type: "submit",
+        isDefaultPrevented: () => false,
+        stopPropagation: () => {},
+        isPropagationStopped: () => false,
+        persist: () => {},
+      } as unknown as React.FormEvent<HTMLFormElement>
 
       handleSubmit(syntheticEvent)
     }
-  }, [ticker, timeRange, bollingerPeriod, rsiPeriod, handleSubmit])
+  }, [appState.stockData, handleSubmit])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-br from-secondary via-background to-muted">

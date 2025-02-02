@@ -13,7 +13,7 @@ export default function AboutPage() {
 
       <p className="mb-4">
         Our stock analysis application uses various data points and calculations to provide insights into stock
-        performance. Here's a comprehensive list of the data fetched and used for our calculations:
+        performance. Here&apos;s a comprehensive list of the data fetched and used for our calculations:
       </p>
 
       <h2 className="text-2xl font-semibold mt-6 mb-4">1. Data Fetched</h2>
@@ -68,4 +68,3 @@ export default function AboutPage() {
     </div>
   )
 }
-

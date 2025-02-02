@@ -1,5 +1,15 @@
 "use server"
 
+interface PolygonResult {
+  c: number // closing price
+  t: number // timestamp
+}
+
+interface PolygonResponse {
+  results?: PolygonResult[]
+  error?: string
+}
+
 export async function fetchStockData(ticker: string, days = 100) {
   try {
     const API_KEY = process.env.POLYGON_API_KEY
@@ -13,7 +23,7 @@ export async function fetchStockData(ticker: string, days = 100) {
     const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${startDate}/${endDate}?apiKey=${API_KEY}`
 
     const response = await fetch(url)
-    const data = await response.json()
+    const data = (await response.json()) as PolygonResponse
 
     if (!response.ok) {
       throw new Error(`API Error: ${data.error || response.statusText}`)
@@ -27,8 +37,8 @@ export async function fetchStockData(ticker: string, days = 100) {
       throw new Error("No data available for this ticker")
     }
 
-    const prices = data.results.map((result: any) => result.c).reverse() // closing prices
-    const dates = data.results.map((result: any) => new Date(result.t).toISOString().split("T")[0]).reverse()
+    const prices = data.results.map((result) => result.c).reverse() // closing prices
+    const dates = data.results.map((result) => new Date(result.t).toISOString().split("T")[0]).reverse()
 
     return { prices, dates }
   } catch (error) {
@@ -42,4 +52,3 @@ export async function fetchStockData(ticker: string, days = 100) {
     )
   }
 }
-

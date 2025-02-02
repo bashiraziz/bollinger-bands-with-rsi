@@ -1,8 +1,9 @@
 "use client"
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import type React from "react" // Import React
 
 interface ChartData {
   date: string
@@ -10,6 +11,30 @@ interface ChartData {
   upper: number
   middle: number
   lower: number
+}
+
+interface TooltipContentProps {
+  active?: boolean
+  payload?: Array<{
+    value: number
+    dataKey: string
+    payload: ChartData
+  }>
+}
+
+const CustomTooltip: React.FC<TooltipContentProps> = ({ active, payload }) => {
+  if (!active || !payload?.length) return null
+
+  const data = payload[0].payload
+  return (
+    <ChartTooltipContent>
+      <p className="font-semibold">{data.date}</p>
+      <p>Price: ${data.price.toFixed(2)}</p>
+      <p>Upper Band: ${data.upper.toFixed(2)}</p>
+      <p>Middle Band: ${data.middle.toFixed(2)}</p>
+      <p>Lower Band: ${data.lower.toFixed(2)}</p>
+    </ChartTooltipContent>
+  )
 }
 
 export default function BollingerChart({ data }: { data: ChartData[] }) {
@@ -46,7 +71,7 @@ export default function BollingerChart({ data }: { data: ChartData[] }) {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
-              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={CustomTooltip} />
               <Legend />
               <Line type="monotone" dataKey="price" stroke="var(--color-price)" dot={false} />
               <Line type="monotone" dataKey="upper" stroke="var(--color-upper)" dot={false} />
@@ -59,4 +84,3 @@ export default function BollingerChart({ data }: { data: ChartData[] }) {
     </Card>
   )
 }
-
